@@ -1,4 +1,4 @@
-{% set version = "4.7.1" %}
+{% set version = "4.7.2" %}
 
 package:
   name: mayavi
@@ -7,10 +7,10 @@ package:
 source:
   fn: mayavi-{{ version }}.tar.gz
   url: https://github.com/enthought/mayavi/archive/{{ version }}.tar.gz
-  sha256: d679daf930751f0c531938f4664a51ac4bed994a807488ca5ea5a8c15fabf184
+  sha256: c8addff9c87c7b9f91d32205c99d0af75cf480cbb2585e69149ab6b9337deb2e
 
 build:
-  number: 2
+  number: 0
   entry_points:
     - mayavi2 = mayavi.scripts.mayavi2:main
     - tvtk_doc = tvtk.tools.tvtk_doc:main
@@ -24,15 +24,17 @@ requirements:
     - python
     - numpy
     - pip
-    - vtk 8.2.0
+    - setuptools
+    - vtk
     - traitsui
     - apptools
     - sphinx  # [osx]
   run:
     - python
     - {{ pin_compatible('numpy') }}
-    - vtk 8.2.0
+    - vtk
     - traitsui
+    - pyface
     - apptools
     - envisage
     - pyqt >=4,<6
