@@ -15,11 +15,14 @@ build:
     - mayavi2 = mayavi.scripts.mayavi2:main
     - tvtk_doc = tvtk.tools.tvtk_doc:main
   skip: True  # [win and py27]
+  ignore_run_exports:
+    - pyqt    # [linux and aarch64]
 
 requirements:
   build:
     - {{ compiler('fortran') }}
     - {{ compiler('c') }}
+    - make    # [linux and aarch64]
   host:
     - python
     - numpy
@@ -28,7 +31,7 @@ requirements:
     - vtk
     - traitsui
     - apptools
-    - sphinx  # [osx]
+    - sphinx  # [osx or (linux and aarch64)]
   run:
     - python
     - {{ pin_compatible('numpy') }}
