@@ -1,6 +1,6 @@
 {% set name = "mayavi" %}
 {% set version = "4.8.1" %}
-{% set sha256 = "9f427ef2ca6c91ae78d92d3689ba6beca24c8460e2706d8a1c9b84289ad3fd9e" %}
+{% set sha256 = "903dc4fe340ddfbb5245b3da92d244912b36f2043aaeea938788689fb965cb1c" %}
 
 package:
   name: {{ name }}
@@ -26,14 +26,15 @@ requirements:
     - {{ compiler('c') }}
     - make    # [linux and aarch64]
   host:
-    - python
-    - numpy
     - pip
-    - setuptools
-    - vtk
-    - traitsui
+    - python
     - apptools
+    - numpy
+    - setuptools
     - sphinx  # [osx or (linux and aarch64)]
+    - traitsui
+    - vtk
+    - wheel
   run:
     - python
     - {{ pin_compatible('numpy') }}
