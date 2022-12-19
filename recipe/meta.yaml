@@ -1,20 +1,22 @@
-{% set version = "4.7.2" %}
+{% set name = "mayavi" %}
+{% set version = "4.8.1" %}
+{% set sha256 = "9f427ef2ca6c91ae78d92d3689ba6beca24c8460e2706d8a1c9b84289ad3fd9e" %}
 
 package:
-  name: mayavi
+  name: {{ name }}
   version: {{ version }}
 
 source:
   fn: mayavi-{{ version }}.tar.gz
   url: https://github.com/enthought/mayavi/archive/{{ version }}.tar.gz
-  sha256: c8addff9c87c7b9f91d32205c99d0af75cf480cbb2585e69149ab6b9337deb2e
+  sha256: {{ sha256 }}
 
 build:
   number: 0
   entry_points:
     - mayavi2 = mayavi.scripts.mayavi2:main
     - tvtk_doc = tvtk.tools.tvtk_doc:main
-  skip: True  # [win and py27]
+  skip: True  # [win and py<37]
   ignore_run_exports:
     - pyqt    # [linux and aarch64]
 
@@ -52,11 +54,15 @@ test:
     - mayavi
 
 about:
-  home: https://github.com/enthought/mayavi
+  home: http://docs.enthought.com/mayavi/mayavi/
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE.txt
   summary: The Mayavi scientific data 3-dimensional visualizers
+  description: |
+    Mayavi2 seeks to provide easy and interactive visualization of 3D data, or 3D plotting.
+    It does this by using an optional, rich user interface, ready to use 3D visualization functionality
+    similar to matlab, and harnessing the power of VTK without forcing you to learn it.
   doc_url: http://docs.enthought.com/mayavi/mayavi
   dev_url: https://github.com/enthought/mayavi
 
