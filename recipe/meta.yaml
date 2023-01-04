@@ -10,6 +10,8 @@ source:
   fn: mayavi-{{ version }}.tar.gz
   url: https://github.com/enthought/mayavi/archive/{{ version }}.tar.gz
   sha256: {{ sha256 }}
+  patches:
+    - patches/0001-Fixed-vtk.patch
 
 build:
   number: 0
@@ -25,6 +27,7 @@ requirements:
     - {{ compiler('fortran') }}
     - {{ compiler('c') }}
     - make    # [linux and aarch64]
+    - patch
   host:
     - pip
     - python

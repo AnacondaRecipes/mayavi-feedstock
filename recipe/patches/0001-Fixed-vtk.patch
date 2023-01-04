@@ -1,0 +1,28 @@
+From 40eaf0048b75793f6715d98092a068edca0aa673 Mon Sep 17 00:00:00 2001
+From: Jaida Rice <jaidarice@gmail.com>
+Date: Wed, 4 Jan 2023 09:39:13 -0800
+Subject: [PATCH] Fixed vtk
+
+---
+ tvtk/vtk_module.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/tvtk/vtk_module.py b/tvtk/vtk_module.py
+index db4eb39a..692b0e91 100644
+--- a/tvtk/vtk_module.py
++++ b/tvtk/vtk_module.py
+@@ -30,7 +30,10 @@ SKIP = []
+ if vtk_version in ['9.0.3', '9.0.2']:
+     # Cause problems if used so ignore these.
+     SKIP = ['vtkDataEncoder', 'vtkWebApplication']
+-    del vtkDataEncoder, vtkWebApplication
++    try:
++        del vtkDataEncoder, vtkWebApplication
++    except NameError:
++        pass
+ 
+ if vtk_version == '9.1.0':
+     SKIP = ['vtkOpenGLAvatar']
+-- 
+2.34.1
+
