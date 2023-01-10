@@ -20,7 +20,8 @@ build:
     - tvtk_doc = tvtk.tools.tvtk_doc:main
   skip: True  # [win and py<37]
   ignore_run_exports:
-    - pyqt    # [linux and aarch64]
+    - pyqt
+    - vtk
 
 requirements:
   build:
