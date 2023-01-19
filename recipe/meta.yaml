@@ -18,8 +18,9 @@ build:
   entry_points:
     - mayavi2 = mayavi.scripts.mayavi2:main
     - tvtk_doc = tvtk.tools.tvtk_doc:main
-  skip: True  # [win and py<37]
+  skip: True  # [py<37]
   ignore_run_exports:
+    - libgfortran5  # [osx]
     - pyqt
     - vtk
 
@@ -36,15 +37,12 @@ requirements:
     - numpy
     - setuptools
     - sphinx  # [osx or (linux and aarch64)]
-    - traitsui
     - vtk
     - wheel
   run:
     - python
     - {{ pin_compatible('numpy') }}
     - vtk
-    - traitsui
-    - pyface
     - apptools
     - envisage
     - pyqt >=4,<6
