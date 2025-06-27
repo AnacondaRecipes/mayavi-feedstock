@@ -37,8 +37,6 @@ requirements:
     - envisage
     - numpy
     - pyface >=6.1.1
-    # Error: pyface 7.3.0 requires importlib-metadata, which is not installed.
-    - importlib-metadata
     - pygments
     - traits >=6.0.0
     - traitsui >=7.0.0
