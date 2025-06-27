@@ -47,8 +47,11 @@ requirements:
     - pyqt
 
 test:
+  requires:
+    - pip
   commands:
     - mayavi2 --help
+    - pip check
   
   imports:
     - mayavi
@@ -88,3 +91,5 @@ extra:
     - hadim
     - dfroger
     - cadair
+  skip-lints:
+    - missing_wheel
