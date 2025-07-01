@@ -1,3 +1,5 @@
 channels:
   - https://staging.continuum.io/prefect/fs/vtk-feedstock/pr24/6a1d4e3
   - https://staging.continuum.io/prefect/fs/pyface-feedstock/pr3/0d2bb82
+  - https://staging.continuum.io/prefect/fs/apptools-feedstock/pr1/bcb5b70
+  - https://staging.continuum.io/prefect/fs/pyface-feedstock/pr3/0d2bb82

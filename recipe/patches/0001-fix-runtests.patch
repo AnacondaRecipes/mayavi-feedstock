@@ -1,0 +1,25 @@
+From d0e3df8a99db07d2b1b5200af69a97d453dff2bc Mon Sep 17 00:00:00 2001
+From: Eric Lundby <Eric.Lundby@gmail.com>
+Date: Mon, 9 Jun 2025 12:23:57 -0600
+Subject: [PATCH 1/1] 0002-fix-runtests
+
+---
+ mayavi/tests/runtests.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mayavi/tests/runtests.py b/mayavi/tests/runtests.py
+index fdda0a7c..e03112f5 100644
+--- a/mayavi/tests/runtests.py
++++ b/mayavi/tests/runtests.py
+@@ -118,6 +118,8 @@ def run(tests, verbose=1):
+         t2 = time.time()
+         out, err = pipe.communicate()
+ 
++        err = err.decode('utf-8')
++
+         # Calculate number of tests run, errors and failures based on output.
+         res = re.search(r'Ran\s*(\d*)\s*test', err)
+         nt = 1
+-- 
+2.45.2
+

@@ -7,6 +7,8 @@ package:
 source:
   url: https://github.com/enthought/mayavi/archive/{{ version }}.tar.gz
   sha256: eb7f46952d4786008ed4f272172bec475fcdcb988f5e1c5405daea9d41955cef
+  patches:
+    patches/0001-fix-runtests.patch
 
 build:
   number: 0
@@ -22,6 +24,8 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
+    - patch  # [not win]
+    - m2-patch  # [win]
   host:
     - python
     - pip
@@ -46,11 +50,16 @@ requirements:
     - pyqt
 
 test:
+  source_files:
+    - mayavi/tests
+    - tvtk/tests
   requires:
     - pip
+    - pytest
   commands:
     - mayavi2 --help
     - pip check
+    - pytest --import-mode=importlib mayavi/tests tvtk/tests
   
   imports:
     - mayavi
