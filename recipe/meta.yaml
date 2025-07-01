@@ -30,7 +30,7 @@ requirements:
     - python
     - pip
     - setuptools
-    - numpy >=2.0.0rc2,<3
+    - numpy {{ numpy }}
     - vtk-base 9.4.1 
     - pyqt {{ pyqt }}
   run:
