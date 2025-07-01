@@ -5,7 +5,6 @@ package:
   version: {{ version }}
 
 source:
-  fn: mayavi-{{ version }}.tar.gz
   url: https://github.com/enthought/mayavi/archive/{{ version }}.tar.gz
   sha256: eb7f46952d4786008ed4f272172bec475fcdcb988f5e1c5405daea9d41955cef
 
@@ -17,7 +16,7 @@ build:
   ignore_run_exports:
     - pyqt    # [linux and aarch64]
   # No vtk for osx-64
-  skip: true  # [osx and x86_64]
+  skip: true  # [py<39 or (osx and x86_64)]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
@@ -41,7 +40,7 @@ requirements:
     - traits >=6.0.0
     - traitsui >=7.0.0
     - packaging
-    - importlib_resources
+    - importlib_resources  # [py<311]
     - vtk-base 
     - puremagic
     - pyqt
