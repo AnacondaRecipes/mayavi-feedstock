@@ -59,7 +59,8 @@ test:
   commands:
     - mayavi2 --help
     - pip check
-    - pytest --import-mode=importlib mayavi/tests tvtk/tests
+    - ETS_TOOLKIT=null pytest --import-mode=importlib mayavi/tests  # [linux]
+    - pytest --import-mode=importlib mayavi/tests tvtk/tests  # [not linux]
   
   imports:
     - mayavi
