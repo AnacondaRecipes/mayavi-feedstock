@@ -1,55 +1,81 @@
-{% set version = "4.7.2" %}
+{% set version = "4.8.3" %}
 
 package:
   name: mayavi
   version: {{ version }}
 
 source:
-  fn: mayavi-{{ version }}.tar.gz
   url: https://github.com/enthought/mayavi/archive/{{ version }}.tar.gz
-  sha256: c8addff9c87c7b9f91d32205c99d0af75cf480cbb2585e69149ab6b9337deb2e
+  sha256: eb7f46952d4786008ed4f272172bec475fcdcb988f5e1c5405daea9d41955cef
+  patches:
+    patches/0001-fix-runtests.patch
 
 build:
   number: 0
   entry_points:
     - mayavi2 = mayavi.scripts.mayavi2:main
     - tvtk_doc = tvtk.tools.tvtk_doc:main
-  skip: True  # [win and py27]
   ignore_run_exports:
     - pyqt    # [linux and aarch64]
+  # No vtk for osx-64
+  skip: true  # [py<39 or (osx and x86_64)]
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
   build:
-    - {{ compiler('fortran') }}
     - {{ compiler('c') }}
-    - make    # [linux and aarch64]
+    - patch  # [not win]
+    - m2-patch  # [win]
   host:
     - python
-    - numpy
     - pip
     - setuptools
-    - vtk
-    - traitsui
-    - apptools
-    - sphinx  # [osx or (linux and aarch64)]
+    - numpy {{ numpy }}
+    - vtk-base 9.4.1 *_2
+    - pyqt {{ pyqt }}
   run:
     - python
-    - {{ pin_compatible('numpy') }}
-    - vtk
-    - traitsui
-    - pyface
     - apptools
+    - configobj
     - envisage
-    - pyqt >=4,<6
-    - setuptools
+    - numpy
+    - pyface >=6.1.1
+    - pygments
+    - traits >=6.0.0
+    - traitsui >=7.0.0
+    - packaging
+    - importlib_resources  # [py<311]
+    - vtk-base >=9.4.1 *_2
+    - puremagic
+    - pyqt
 
 test:
+  source_files:
+    - mayavi/tests
+    - tvtk/tests
+  requires:
+    - pip
+    - pytest
   commands:
     - mayavi2 --help
+    - pip check
+    - ETS_TOOLKIT=null pytest --import-mode=importlib mayavi/tests  # [linux]
+    - pytest --import-mode=importlib mayavi/tests tvtk/tests  # [not linux]
+  
   imports:
-    - tvtk
-    - tvtk.array_ext
     - mayavi
+    - tvtk
+    - tvtk.api
+    - tvtk.array_ext
+    - tvtk.common
+    - tvtk.array_handler
+    - mayavi.core
+    - mayavi.sources
+    - mayavi.modules
+    - mayavi.filters
+    - mayavi.tools
+    # Skip mlab import test as it requires GUI context
+    # - mayavi.mlab
 
 about:
   home: https://github.com/enthought/mayavi
@@ -57,7 +83,14 @@ about:
   license_family: BSD
   license_file: LICENSE.txt
   summary: The Mayavi scientific data 3-dimensional visualizers
-  doc_url: http://docs.enthought.com/mayavi/mayavi
+  description: |
+    Mayavi is a general purpose, cross-platform tool for 2-D and 3-D scientific data visualization.
+    It provides easy and interactive visualization of data, with a GUI that can be used by novices,
+    and a Python API for advanced users. Mayavi is built on top of VTK (Visualization Toolkit) and
+    provides a Pythonic interface to VTK. It can be used both as an interactive program or as a
+    programming library. Mayavi integrates seamlessly with numpy and scipy for scientific computing
+    and can be embedded in various GUI toolkits.
+  doc_url: https://docs.enthought.com/mayavi/mayavi
   dev_url: https://github.com/enthought/mayavi
 
 extra:
@@ -67,3 +100,5 @@ extra:
     - hadim
     - dfroger
     - cadair
+  skip-lints:
+    - missing_wheel
