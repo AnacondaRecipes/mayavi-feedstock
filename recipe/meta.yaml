@@ -31,7 +31,7 @@ requirements:
     - pip
     - setuptools
     - numpy {{ numpy }}
-    - vtk-base 9.4.1 
+    - vtk-base 9.4.1 *_2
     - pyqt {{ pyqt }}
   run:
     - python
@@ -45,7 +45,7 @@ requirements:
     - traitsui >=7.0.0
     - packaging
     - importlib_resources  # [py<311]
-    - vtk-base 
+    - vtk-base >=9.4.1 *_2
     - puremagic
     - pyqt
 
