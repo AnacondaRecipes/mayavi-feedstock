@@ -11,7 +11,7 @@ source:
     patches/0001-fix-runtests.patch
 
 build:
-  number: 0
+  number: 1
   entry_points:
     - mayavi2 = mayavi.scripts.mayavi2:main
     - tvtk_doc = tvtk.tools.tvtk_doc:main
