@@ -1,4 +1,4 @@
-{% set version = "4.8.3" %}
+{% set version = "4.9.0" %}
 
 package:
   name: mayavi
@@ -6,9 +6,8 @@ package:
 
 source:
   url: https://github.com/enthought/mayavi/archive/{{ version }}.tar.gz
-  sha256: eb7f46952d4786008ed4f272172bec475fcdcb988f5e1c5405daea9d41955cef
-  patches:
-    patches/0001-fix-runtests.patch
+  sha256: f2e6d990c47e0cda6c795242a5e612e4c5291bbef4a0e42b4e7d65d83c01be3c
+  patches: patches/0001-fix-runtests.patch
 
 build:
   number: 0
@@ -16,9 +15,9 @@ build:
     - mayavi2 = mayavi.scripts.mayavi2:main
     - tvtk_doc = tvtk.tools.tvtk_doc:main
   ignore_run_exports:
-    - pyqt    # [linux and aarch64]
+    - pyqt  # [linux and aarch64]
   # No vtk for osx-64
-  skip: true  # [py<39 or (osx and x86_64)]
+  skip: true  # [py<310 or (osx and x86_64)]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
@@ -29,10 +28,13 @@ requirements:
   host:
     - python
     - pip
-    - setuptools
+    - setuptools >=77
     - numpy {{ numpy }}
     - vtk-base 9.4.1 *_2
     - pyqt {{ pyqt }}
+    - setuptools-scm >=8
+    - vtk >=9.4
+    - numpy
   run:
     - python
     - apptools
@@ -48,6 +50,9 @@ requirements:
     - vtk-base >=9.4.1 *_2
     - puremagic
     - pyqt
+    - vtk >=9.4,<9.8
+  run_constrained:
+    - setuptools <82
 
 test:
   source_files:
@@ -61,7 +66,6 @@ test:
     - pip check
     - ETS_TOOLKIT=null pytest --import-mode=importlib mayavi/tests  # [linux]
     - pytest --import-mode=importlib mayavi/tests tvtk/tests  # [not linux]
-  
   imports:
     - mayavi
     - tvtk
