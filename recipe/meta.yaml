@@ -71,7 +71,7 @@ test:
     - mayavi
     - tvtk
     - tvtk.api
-    - tvtk.array_ext
+    # tvtk.array_ext Cython extension removed in 4.9.0 (pure-Python array_handler)
     - tvtk.common
     - tvtk.array_handler
     - mayavi.core
