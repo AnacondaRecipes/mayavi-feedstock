@@ -48,7 +48,7 @@ requirements:
     - traitsui >=7.0.0
     - packaging
     - importlib_resources  # [py<311]
-    - vtk-base >=9.6.2,<9.8 *_2
+    # vtk-base comes from the host run_export (pin_subpackage max_pin='x.x.x')
     - puremagic
     - pyqt
   run_constrained:
