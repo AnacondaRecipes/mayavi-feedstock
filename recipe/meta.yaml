@@ -7,7 +7,8 @@ package:
 source:
   url: https://github.com/enthought/mayavi/archive/{{ version }}.tar.gz
   sha256: f2e6d990c47e0cda6c795242a5e612e4c5291bbef4a0e42b4e7d65d83c01be3c
-  patches: patches/0001-fix-runtests.patch
+  patches:
+    - patches/0001-fix-runtests.patch
 
 build:
   number: 0
@@ -16,25 +17,25 @@ build:
     - tvtk_doc = tvtk.tools.tvtk_doc:main
   ignore_run_exports:
     - pyqt  # [linux and aarch64]
-  # No vtk for osx-64
+  # No vtk for osx-64; upstream requires-python >=3.10
   skip: true  # [py<310 or (osx and x86_64)]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
   build:
-    - {{ compiler('c') }}
+    # C extension removed in 4.9.0; patch still needed for runtests decode fix
     - patch  # [not win]
     - m2-patch  # [win]
   host:
     - python
     - pip
+    # pyproject.toml build-system: setuptools>=77, setuptools_scm>=8, vtk>=9.4, numpy
     - setuptools >=77
-    - numpy {{ numpy }}
-    - vtk-base 9.4.1 *_2
-    - pyqt {{ pyqt }}
     - setuptools-scm >=8
-    - vtk >=9.4
-    - numpy
+    - numpy {{ numpy }}
+    # 9.6.2 *_2 coinstalls with CBC pyqt 6.11 (qtbase 6.11); 9.4.1 *_2 needs qtbase 6.7
+    - vtk-base 9.6.2 *_2
+    - pyqt {{ pyqt }}
   run:
     - python
     - apptools
@@ -47,11 +48,11 @@ requirements:
     - traitsui >=7.0.0
     - packaging
     - importlib_resources  # [py<311]
-    - vtk-base >=9.4.1 *_2
+    - vtk-base >=9.6.2,<9.8 *_2
     - puremagic
     - pyqt
-    - vtk >=9.4,<9.8
   run_constrained:
+    # envisage.api still imports pkg_resources (removed in setuptools 82); app extra
     - setuptools <82
 
 test:
@@ -85,7 +86,10 @@ about:
   home: https://github.com/enthought/mayavi
   license: BSD-3-Clause
   license_family: BSD
-  license_file: LICENSE.txt
+  license_file:
+    - LICENSE.txt
+    - LICENSE_COLORBREWER.txt
+    - LICENSE_YORICK.txt
   summary: The Mayavi scientific data 3-dimensional visualizers
   description: |
     Mayavi is a general purpose, cross-platform tool for 2-D and 3-D scientific data visualization.
