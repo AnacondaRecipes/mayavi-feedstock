@@ -33,7 +33,6 @@ requirements:
     - setuptools >=77
     - setuptools-scm >=8
     - numpy {{ numpy }}
-    # CBC vtk_base is 9.6.2 (qtbase 6.11); older 9.4.1 needs qtbase 6.7 and conflicts with CBC pyqt
     - vtk-base {{ vtk_base }}
     - pyqt {{ pyqt }}
   run:
