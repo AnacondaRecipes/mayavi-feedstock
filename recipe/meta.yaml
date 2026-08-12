@@ -67,11 +67,12 @@ test:
   commands:
     - mayavi2 --help
     - pip check
-    # linux: headless; mayavi only (tvtk GUI tests need a display)
-    - ETS_TOOLKIT=null pytest --import-mode=importlib mayavi/tests  # [linux]
-    # not linux: run suites separately - both ship tests/conftest.py as module
+    # unix: null toolkit skips GUI GC test (Abort trap: 6 on osx-arm64 CI);
+    # linux also avoids display-less tvtk GUI suite
+    - ETS_TOOLKIT=null pytest --import-mode=importlib mayavi/tests  # [unix]
+    - pytest --import-mode=importlib mayavi/tests  # [win]
+    # not linux: run tvtk suite alone - both ship tests/conftest.py as
     # 'tests.conftest'; combined argv hits "Plugin already registered"
-    - pytest --import-mode=importlib mayavi/tests  # [not linux]
     - pytest --import-mode=importlib tvtk/tests  # [not linux]
   imports:
     - mayavi
