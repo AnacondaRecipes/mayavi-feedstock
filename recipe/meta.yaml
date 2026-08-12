@@ -71,9 +71,11 @@ test:
     # linux also avoids display-less tvtk GUI suite
     - ETS_TOOLKIT=null pytest --import-mode=importlib mayavi/tests  # [unix]
     - pytest --import-mode=importlib mayavi/tests  # [win]
-    # suites ship separate tests/conftest.py as 'tests.conftest' — run alone
-    # osx: null toolkit skips tvtk GUI GC (Abort trap: 6); win OpenGL OK
-    - ETS_TOOLKIT=null pytest --import-mode=importlib tvtk/tests  # [osx]
+    # suites ship separate tests/conftest.py as 'tests.conftest' - run alone.
+    # osx: null toolkit skips tvtk GUI GC; ignore the QVTK interactor test - it
+    # builds a real Qt render window (bypasses ETSConfig) and Abort trap: 6 on
+    # the headless osx-arm64 worker. win OpenGL OK.
+    - ETS_TOOLKIT=null pytest --import-mode=importlib tvtk/tests --ignore=tvtk/tests/test_qvtk_render_window_interactor.py  # [osx]
     - pytest --import-mode=importlib tvtk/tests  # [win]
   imports:
     - mayavi
