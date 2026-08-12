@@ -71,9 +71,10 @@ test:
     # linux also avoids display-less tvtk GUI suite
     - ETS_TOOLKIT=null pytest --import-mode=importlib mayavi/tests  # [unix]
     - pytest --import-mode=importlib mayavi/tests  # [win]
-    # not linux: run tvtk suite alone - both ship tests/conftest.py as
-    # 'tests.conftest'; combined argv hits "Plugin already registered"
-    - pytest --import-mode=importlib tvtk/tests  # [not linux]
+    # suites ship separate tests/conftest.py as 'tests.conftest' — run alone
+    # osx: null toolkit skips tvtk GUI GC (Abort trap: 6); win OpenGL OK
+    - ETS_TOOLKIT=null pytest --import-mode=importlib tvtk/tests  # [osx]
+    - pytest --import-mode=importlib tvtk/tests  # [win]
   imports:
     - mayavi
     - tvtk
