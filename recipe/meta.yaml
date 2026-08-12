@@ -62,11 +62,17 @@ test:
   requires:
     - pip
     - pytest
+    # mayavi/tests use @pytest.mark.timeout (PytestUnknownMarkWarning -> ERROR without plugin)
+    - pytest-timeout
   commands:
     - mayavi2 --help
     - pip check
+    # linux: headless; mayavi only (tvtk GUI tests need a display)
     - ETS_TOOLKIT=null pytest --import-mode=importlib mayavi/tests  # [linux]
-    - pytest --import-mode=importlib mayavi/tests tvtk/tests  # [not linux]
+    # not linux: run suites separately - both ship tests/conftest.py as module
+    # 'tests.conftest'; combined argv hits "Plugin already registered"
+    - pytest --import-mode=importlib mayavi/tests  # [not linux]
+    - pytest --import-mode=importlib tvtk/tests  # [not linux]
   imports:
     - mayavi
     - tvtk
