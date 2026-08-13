@@ -1,4 +1,4 @@
-{% set version = "4.8.3" %}
+{% set version = "4.9.0" %}
 
 package:
   name: mayavi
@@ -6,9 +6,9 @@ package:
 
 source:
   url: https://github.com/enthought/mayavi/archive/{{ version }}.tar.gz
-  sha256: eb7f46952d4786008ed4f272172bec475fcdcb988f5e1c5405daea9d41955cef
+  sha256: f2e6d990c47e0cda6c795242a5e612e4c5291bbef4a0e42b4e7d65d83c01be3c
   patches:
-    patches/0001-fix-runtests.patch
+    - patches/0001-fix-runtests.patch
 
 build:
   number: 0
@@ -16,22 +16,18 @@ build:
     - mayavi2 = mayavi.scripts.mayavi2:main
     - tvtk_doc = tvtk.tools.tvtk_doc:main
   ignore_run_exports:
-    - pyqt    # [linux and aarch64]
-  # No vtk for osx-64
-  skip: true  # [py<39 or (osx and x86_64)]
+    - pyqt  # [linux and aarch64]
+  skip: true  # [py<310 or (osx and x86_64)]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
-  build:
-    - {{ compiler('c') }}
-    - patch  # [not win]
-    - m2-patch  # [win]
   host:
     - python
     - pip
-    - setuptools
+    - setuptools >=77
+    - setuptools-scm >=8
     - numpy {{ numpy }}
-    - vtk-base 9.4.1 *_2
+    - vtk-base {{ vtk_base }}
     - pyqt {{ pyqt }}
   run:
     - python
@@ -45,9 +41,12 @@ requirements:
     - traitsui >=7.0.0
     - packaging
     - importlib_resources  # [py<311]
-    - vtk-base >=9.4.1 *_2
+    # vtk-base comes from the host run_export (pin_subpackage max_pin='x.x.x')
     - puremagic
     - pyqt
+  run_constrained:
+    # envisage.api still imports pkg_resources (removed in setuptools 82); app extra
+    - setuptools <82
 
 test:
   source_files:
@@ -56,17 +55,25 @@ test:
   requires:
     - pip
     - pytest
+    # mayavi/tests use @pytest.mark.timeout (PytestUnknownMarkWarning -> ERROR without plugin)
+    - pytest-timeout
   commands:
     - mayavi2 --help
     - pip check
-    - ETS_TOOLKIT=null pytest --import-mode=importlib mayavi/tests  # [linux]
-    - pytest --import-mode=importlib mayavi/tests tvtk/tests  # [not linux]
-  
+    # unix: null toolkit skips GUI GC test (Abort trap: 6 on osx-arm64 CI);
+    # linux also avoids display-less tvtk GUI suite
+    - ETS_TOOLKIT=null pytest --import-mode=importlib mayavi/tests  # [unix]
+    - pytest --import-mode=importlib mayavi/tests  # [win]
+    # suites ship separate tests/conftest.py as 'tests.conftest' - run alone.
+    # osx: null toolkit skips tvtk GUI GC; ignore the QVTK interactor test - it
+    # builds a real Qt render window (bypasses ETSConfig) and Abort trap: 6 on
+    # the headless osx-arm64 worker. win OpenGL OK.
+    - ETS_TOOLKIT=null pytest --import-mode=importlib tvtk/tests --ignore=tvtk/tests/test_qvtk_render_window_interactor.py  # [osx]
+    - pytest --import-mode=importlib tvtk/tests  # [win]
   imports:
     - mayavi
     - tvtk
     - tvtk.api
-    - tvtk.array_ext
     - tvtk.common
     - tvtk.array_handler
     - mayavi.core
@@ -79,9 +86,12 @@ test:
 
 about:
   home: https://github.com/enthought/mayavi
-  license: BSD-3-Clause
+  license: BSD-3-Clause AND LicenseRef-ColorBrewer-1.1 AND LicenseRef-Yorick
   license_family: BSD
-  license_file: LICENSE.txt
+  license_file:
+    - LICENSE.txt
+    - LICENSE_COLORBREWER.txt
+    - LICENSE_YORICK.txt
   summary: The Mayavi scientific data 3-dimensional visualizers
   description: |
     Mayavi is a general purpose, cross-platform tool for 2-D and 3-D scientific data visualization.
