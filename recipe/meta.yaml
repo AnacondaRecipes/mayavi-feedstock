@@ -17,19 +17,13 @@ build:
     - tvtk_doc = tvtk.tools.tvtk_doc:main
   ignore_run_exports:
     - pyqt  # [linux and aarch64]
-  # No vtk for osx-64; upstream requires-python >=3.10
   skip: true  # [py<310 or (osx and x86_64)]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
-  build:
-    # C extension removed in 4.9.0; patch still needed for runtests decode fix
-    - patch  # [not win]
-    - m2-patch  # [win]
   host:
     - python
     - pip
-    # pyproject.toml build-system: setuptools>=77, setuptools_scm>=8, vtk>=9.4, numpy
     - setuptools >=77
     - setuptools-scm >=8
     - numpy {{ numpy }}
@@ -80,7 +74,6 @@ test:
     - mayavi
     - tvtk
     - tvtk.api
-    # tvtk.array_ext Cython extension removed in 4.9.0 (pure-Python array_handler)
     - tvtk.common
     - tvtk.array_handler
     - mayavi.core
@@ -93,7 +86,7 @@ test:
 
 about:
   home: https://github.com/enthought/mayavi
-  license: BSD-3-Clause
+  license: BSD-3-Clause AND LicenseRef-ColorBrewer-1.1 AND LicenseRef-Yorick
   license_family: BSD
   license_file:
     - LICENSE.txt
